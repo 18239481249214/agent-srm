@@ -1,0 +1,8 @@
+The chat has ended. Thinking about the person you just spoke with, please rate
+the degree to which this person expresses the following characteristics, where
+{scale_min} means "not at all" and {scale_max} means "very much".
+
+{item_lines}
+
+Reply with only a JSON object mapping each word to a whole number from
+{scale_min} to {scale_max}. No other text.

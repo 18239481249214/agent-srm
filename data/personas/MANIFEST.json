@@ -1,0 +1,15 @@
+{
+  "source": "LLM-Digital-Twin/Twin-2K-500 (full_persona)",
+  "revision": null,
+  "field": "persona_summary",
+  "files": {
+    "persona_chunk_001.parquet": "e80886dbbafa5062915c0b6f0172b99bfb638815943c503582b51de444e734fa",
+    "persona_chunk_002.parquet": "ab867169ec8726c10fccafea034e8946b1235ef578761d299eb60a481437605f",
+    "persona_chunk_003.parquet": "7ca07c0d638a2ea4d9b009f152b8c1eff1a30e1c1730eb21c41e3a14e2702da2",
+    "persona_chunk_004.parquet": "9e7bd6a0c583a6eabea317e5a1add8d2b3556bb0e3d3e0d7d47775888f9f4787",
+    "persona_chunk_005.parquet": "0e2ca75cbc7be66cac80358295512e91ad973cfd6852be46ac5f9fc502541774",
+    "persona_chunk_006.parquet": "1d890ded9e9cd4451663fd2df4993b19041b6a9fec669723c06a8fea21be9abd",
+    "persona_chunk_007.parquet": "20bb4236e53de14ffe53ce648fb0528a0832de6fff694e6299399f7afc74a0ac"
+  },
+  "n": 2058
+}

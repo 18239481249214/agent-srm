@@ -1,0 +1,41 @@
+# Persona source data — third-party dataset, do not redistribute.
+# Obtain from https://huggingface.co/datasets/LLM-Digital-Twin/Twin-2K-500
+# and verify against data/personas/MANIFEST.json
+data/personas/*.parquet
+
+# Collected run data lives on OSF; only the combined dataset/ files are tracked.
+runs/
+!runs/.gitkeep
+
+# Transcript exports (regenerable from transcripts.jsonl)
+conversations_*.txt
+one_persona.txt
+persona_*.txt
+
+# Test fixtures
+tests/_fixture_personas/
+configs/_test_generated.yaml
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Never commit credentials
+.env
+*.key
+secrets.*

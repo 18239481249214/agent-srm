@@ -1,0 +1,10 @@
+source_run,collection,model_id,model_snapshot,provider,persona_mode,seed,design_digest,block_size,k,blocks,directed_ratings,personas,empty_messages,conv_max_tokens,rating_max_tokens
+k10_n5__deepseek-v4-pro,1,deepseek-v4-pro,deepseek-v4-pro,api.deepseek.com,full,20260818,cbaa068df62548d876861c118b55289ce422f92fff1de4df4ec480b28dbffe3b,5,10,50,1000,250,0,3072,4096
+k10_n5_s2__deepseek-v4-pro,2,deepseek-v4-pro,deepseek-v4-pro,api.deepseek.com,full,20260901,97dd64f889baf4defeed52a126efc7a0b84b1ab1d9296c632399063a987f4a99,5,10,50,1000,250,0,3072,4096
+kimi26_n5_s2__kimi-k2-6,2,moonshotai/kimi-k2.6,moonshotai/kimi-k2.6,openrouter.ai,full,20260903,0cd26496a3356b2c2e466719fb60c54b14de34d984672de0f815e4f7696c976f,5,10,50,1000,250,0,12288,16384
+nemotron_n5_s2__nemotron-3-ultra,2,nvidia/nemotron-3-ultra-550b-a55b,nvidia/nemotron-3-ultra-550b-a55b,openrouter.ai,full,20260902,557e5c149f8ad428379235794f86c96481acac7f59177d8ba96d81a41d65494a,5,10,50,1000,250,0,12288,16384
+persona_k10_n5_kimi26__kimi-k2-6,1,moonshotai/kimi-k2.6,moonshotai/kimi-k2.6,openrouter.ai,full,20260818,cbaa068df62548d876861c118b55289ce422f92fff1de4df4ec480b28dbffe3b,5,10,50,1000,250,0,12288,16384
+persona_k10_n5_kimi26_null__kimi-k2-6,1,moonshotai/kimi-k2.6,moonshotai/kimi-k2.6,openrouter.ai,none,20260818,cbaa068df62548d876861c118b55289ce422f92fff1de4df4ec480b28dbffe3b,5,10,50,1000,250,0,4096,6144
+persona_k10_n5_nemotron__nemotron-3-ultra,1,nvidia/nemotron-3-ultra-550b-a55b,nvidia/nemotron-3-ultra-550b-a55b,openrouter.ai,full,20260818,cbaa068df62548d876861c118b55289ce422f92fff1de4df4ec480b28dbffe3b,5,10,50,1000,250,0,4096,6144
+persona_k10_n5_nemotron_null__nemotron-3-ultra,1,nvidia/nemotron-3-ultra-550b-a55b,nvidia/nemotron-3-ultra-550b-a55b,openrouter.ai,none,20260818,cbaa068df62548d876861c118b55289ce422f92fff1de4df4ec480b28dbffe3b,5,10,50,1000,250,0,4096,6144
+persona_k10_n5_null__deepseek-v4-pro,1,deepseek-v4-pro,deepseek-v4-pro,api.deepseek.com,none,20260818,cbaa068df62548d876861c118b55289ce422f92fff1de4df4ec480b28dbffe3b,5,10,50,1000,250,0,3072,4096

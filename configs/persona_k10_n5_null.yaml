@@ -1,0 +1,48 @@
+﻿study_id: persona_k10_n5_null
+seed: 20260818
+
+personas:
+  dir: data/personas
+  field: persona_summary
+  manifest: data/personas/MANIFEST.json
+  mode: none
+
+design:
+  block_size: 5
+  n_blocks: 50
+  k: 10
+  intro_mode: null
+  self_ratings: false
+
+naming:
+  enabled: false
+
+items:
+  warmth: [warm, kind]
+  competence: [capable, effective]
+  scale_min: 1
+  scale_max: 5
+  randomize_item_order: true
+
+model:
+  conversation: {temperature: 1.0, max_tokens: 3072, top_p: 1.0}
+  rating: {temperature: 0.0, max_tokens: 4096, top_p: 1.0}
+  max_json_retries: 3
+
+arms:
+  - slug: deepseek-v4-pro
+    model_id: deepseek-v4-pro
+    base_url: https://api.deepseek.com/v1
+    api_key_env: DEEPSEEK_API_KEY
+    json_strategy: none
+    reasoning: null
+
+execution:
+  max_concurrent_dyads: 4
+  request_timeout_s: 300
+  max_retries: 5
+  backoff_base_s: 2
+  checkpoint_dir: runs/{study_id}/checkpoints
+
+output:
+  dir: runs/{study_id}

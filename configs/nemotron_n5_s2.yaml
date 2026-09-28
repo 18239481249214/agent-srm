@@ -1,0 +1,51 @@
+﻿study_id: nemotron_n5_s2
+seed: 20260902
+
+personas:
+  dir: data/personas
+  field: persona_summary
+  manifest: data/personas/MANIFEST.json
+  mode: full
+
+design:
+  block_size: 5
+  n_blocks: 50
+  k: 10
+  intro_mode: null
+  self_ratings: false
+
+naming:
+  enabled: false
+
+items:
+  warmth: [warm, kind]
+  competence: [capable, effective]
+  scale_min: 1
+  scale_max: 5
+  randomize_item_order: true
+
+model:
+  conversation: {temperature: 1.0, max_tokens: 12288, top_p: 1.0}
+  rating: {temperature: 0.0, max_tokens: 16384, top_p: 1.0}
+  max_json_retries: 3
+
+arms:
+  - slug: nemotron-3-ultra
+    model_id: nvidia/nemotron-3-ultra-550b-a55b
+    base_url: https://openrouter.ai/api/v1
+    api_key_env: OPENROUTER_API_KEY
+    json_strategy: none
+    reasoning:
+      provider:
+        order: ["Baseten"]
+        allow_fallbacks: false
+
+execution:
+  max_concurrent_dyads: 4
+  request_timeout_s: 300
+  max_retries: 5
+  backoff_base_s: 2
+  checkpoint_dir: runs/{study_id}/checkpoints
+
+output:
+  dir: runs/{study_id}
