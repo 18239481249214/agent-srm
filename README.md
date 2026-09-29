@@ -14,7 +14,8 @@ to the perceiver, to the target, and to the unique perceiver × target pairing.
 Companion documents:
 
 - **`REPRODUCE.md`** — full setup, endpoints, operational notes, known limitations
-- **`agent_srm_design_v2.md`** — design specification and rationale
+- **`DATA.md`** — what is in the repository versus the v1.0.0 release, and what
+  verification was performed
 
 ---
 
@@ -55,7 +56,7 @@ Python 3.11+.
 python -m venv .venv
 source .venv/bin/activate          # Windows: .\.venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
-python -m pytest -q                # 33 tests, no network access required
+python -m pytest -q                # acceptance suite, no network access required
 ```
 
 ### Verify without collecting anything
@@ -121,24 +122,24 @@ block is unusable in `TripleR` and would silently distort variance estimates.
 
 ## Verification
 
-The tool ships with independent audit scripts. All were run on the collected
-dataset before analysis.
+`scripts/check_empty.py` is included and reports empty and truncated messages by
+run and stop reason.
 
-| Script | Checks |
+The following checks were run on the collected data before analysis. The scripts
+used were written ad hoc during collection and are **not included in this
+archive**; the results are reported here, and `3_run_outputs.zip` contains the
+raw records each was derived from, so they can be repeated independently.
+
+| Check | Result |
 |---|---|
-| `verify_run.py` | round robin complete, no self-ratings, persona independence, score validity, message alternation, no construct label in any prompt, item-order randomisation, single model snapshot |
-| `audit_ratings.py` | traces every rating from the model's literal reply through the runner's parse to the CSV row, using a parser independent of the runner's |
-| `check_empty.py` | empty and truncated messages, by run and stop reason |
-| `package_dataset.py` | verifies all runs, then combines them into a single labelled dataset |
-| `check_long_wide.py` | long and wide CSVs describe identical data |
+| Message completeness | Zero empty and zero truncated messages across all nine arms and 45,000 generated messages |
+| Output chain | All 9,000 ratings traced from the model's literal reply, through the runner's parse, to the CSV row — using a parser sharing no code with the runner. All three stages agreed for every rating. |
+| Experimental isolation | 5,984 directions checked across the six persona arms using each persona's forward-flow word chain, which is unique per respondent. No persona's system prompt contained text unique to its partner. |
+| Structural validity | Every block a complete round robin; no self-ratings; no persona in more than one block; long and wide CSVs identical; one model snapshot per arm |
 
-`audit_ratings.py` is the load-bearing one: it re-parses `raw_response` — the
-model's literal text, stored before processing — and compares it against both the
-runner's interpretation and the CSV. It was validated against three deliberately
-corrupted datasets (an altered CSV value, a mismatched parse, and items remapped
-by position rather than by name) and detects all three.
-
-Both `verify_run.py` and `audit_ratings.py` exit non-zero on failure.
+The output-chain check was validated against three deliberately corrupted
+datasets — an altered CSV value, a parsed value not matching the raw text, and
+items remapped by position rather than by name — and detected all three.
 
 ---
 
@@ -174,12 +175,16 @@ the model, provides a falsification test.
 agent_srm/
 ├── configs/           study configurations, one per arm
 ├── prompts/           versioned prompt templates (hashed into every manifest)
-├── data/personas/     Twin-2K-500 parquet chunks + MANIFEST.json (checksums)
+├── data/personas/     MANIFEST.json (checksums); the parquet chunks ship in
+│                      the v1.0.0 release
+├── dataset/           combined ratings, persona covariates, per-arm manifest
 ├── scripts/           acquisition, verification and packaging utilities
 ├── src/agent_srm/     the runner
-├── tests/             33 acceptance tests, no network access required
-└── runs/              collected data, one directory per arm
+├── tests/             acceptance suite, no network access required
 ```
+
+Per-arm outputs and the persona corpus are attached to the **v1.0.0 release**
+rather than committed, being too large for version control. See `DATA.md`.
 
 ---
 
@@ -204,6 +209,6 @@ Stated fully in `REPRODUCE.md` §7. In brief:
   identified, removed and re-collected at a higher budget. The final dataset
   contains no empty or truncated messages, but a subset of blocks originates from
   a second collection pass under a larger `max_tokens`.
-- **Independent code review is outstanding.** The runner has been verified by the
-  audit scripts above and by 33 automated tests, but has not been read by a
-  reviewer other than its authors.
+- **The runner was written with an AI coding assistant.** It was verified by the
+  acceptance test suite and by the checks reported above, but has not been read
+  line-by-line by a human reviewer other than its authors.
