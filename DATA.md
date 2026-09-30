@@ -33,6 +33,111 @@ See **Releases → v1.0.0**. GitHub publishes a SHA-256 for each asset.
   and each rating with its raw model response
 - `ratings.csv`, `ratings_wide.csv`, `personas.csv`, `manifest.json`
 
+## Assembling the archive
+
+The three release assets do **not** unpack into a working layout on their own.
+Unpacking them side by side will leave the persona directory empty and the
+runner will fail on a checksum error. Assemble them as follows.
+
+### 1. Unpack the code
+
+Unpack `1_code_and_dataset.zip`. Its contents become the project root — call it
+`agent-srm`:
+
+```
+agent-srm/
+├── src/  scripts/  configs/  prompts/  tests/  dataset/
+├── data/personas/MANIFEST.json
+├── README.md  REPRODUCE.md  DATA.md
+├── LICENSE  LICENSE-DATA  .gitignore  pyproject.toml
+```
+
+Equivalently, clone this repository instead — the contents are identical.
+
+### 2. Unpack the persona corpus *into* the project
+
+`2_persona_corpus.zip` contains seven parquet files and a copy of
+`MANIFEST.json` at its root. These belong **inside** `data/personas/`, not
+beside the project:
+
+```
+agent-srm/data/personas/
+├── MANIFEST.json
+├── persona_chunk_001.parquet
+├── persona_chunk_002.parquet
+├── persona_chunk_003.parquet
+├── persona_chunk_004.parquet
+├── persona_chunk_005.parquet
+├── persona_chunk_006.parquet
+└── persona_chunk_007.parquet
+```
+
+`MANIFEST.json` is identical in both archives; overwriting is harmless.
+
+### 3. Unpack the run outputs (optional)
+
+Only needed to inspect the original collection. `3_run_outputs.zip` contains
+nine arm directories, which belong in a `runs/` folder at the project root:
+
+```
+agent-srm/runs/
+├── k10_n5__deepseek-v4-pro/
+├── k10_n5_s2__deepseek-v4-pro/
+├── kimi26_n5_s2__kimi-k2-6/
+├── nemotron_n5_s2__nemotron-3-ultra/
+├── persona_k10_n5_kimi26__kimi-k2-6/
+├── persona_k10_n5_kimi26_null__kimi-k2-6/
+├── persona_k10_n5_nemotron__nemotron-3-ultra/
+├── persona_k10_n5_nemotron_null__nemotron-3-ultra/
+└── persona_k10_n5_null__deepseek-v4-pro/
+```
+
+Each arm directory contains `transcripts.jsonl`, `ratings.csv`,
+`ratings_wide.csv`, `personas.csv` and `manifest.json`.
+
+### 4. Complete layout
+
+```
+agent-srm/
+├── configs/                    nine arm configurations
+├── prompts/                    prompt templates
+├── scripts/                    tooling
+├── src/agent_srm/              the runner
+├── tests/                      acceptance suite
+├── dataset/                    combined ratings and covariates
+├── data/personas/              MANIFEST.json + 7 parquet chunks   ← zip 2
+├── runs/                       nine arm directories (optional)    ← zip 3
+├── README.md  REPRODUCE.md  DATA.md
+└── pyproject.toml
+```
+
+### 5. Verify before running
+
+```bash
+pip install -e ".[dev]"
+python scripts/check_extractor.py --dir data/personas
+```
+
+`check_extractor.py` must report **14/14 demographic fields at 2058/2058** and
+**46 score fields**, and exits non-zero otherwise. If it reports no parquet
+files found, the corpus was unpacked to the wrong location — see step 2.
+
+Do **not** run `scripts/index_personas.py` against the supplied corpus. It
+overwrites `MANIFEST.json` with checksums of whatever is present, discarding
+the collection-time record that lets you confirm the files are identical to
+those used here.
+
+### 6. Run
+
+```bash
+export DEEPSEEK_API_KEY=...        # or OPENROUTER_API_KEY, per arm
+python -m agent_srm.cli validate --config configs/k10_n5.yaml
+python -m agent_srm.cli run --config configs/k10_n5.yaml --workers 4
+```
+
+Each arm is 50 blocks and requires API access and billing on your own account.
+See `REPRODUCE.md` §6 for endpoints and per-arm token budgets.
+
 ## Persona corpus
 
 Persona descriptions are from **Twin-2K-500**:
@@ -64,18 +169,8 @@ themselves are included here, this does not affect reproducibility.
 
 ## Reproducing
 
-See `REPRODUCE.md`. In short:
-
-```bash
-pip install -e ".[dev]"
-# unpack 2_persona_corpus.zip into data/personas/ first
-python scripts/check_extractor.py --dir data/personas
-python -m agent_srm.cli run --config configs/<arm>.yaml --workers 4
-```
-
-Do not run `scripts/index_personas.py` against the supplied corpus unless you
-intend to replace the checksums — it overwrites `MANIFEST.json` with hashes of
-whatever is present, discarding the collection-time record.
+Assemble the archive as above, then see `REPRODUCE.md` for full setup,
+endpoints and operational notes.
 
 Design-level randomisation is exact: the same seed and the same persona
 checksums reproduce identical block composition, dyad membership, initiator
